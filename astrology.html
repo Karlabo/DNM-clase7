@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="style.css" />
+        <title>DNOO37</title>
+    </head>
+    <body>
+        <nav>
+            <h1><a href="index.html">Karla Bonilla</a></h1>
+            <select onchange="location = this.value;">
+                <option value="index.html">INDEX</option>
+                <option value="astrology.html" selected>ASTROLOGY</option>
+                <option value="astronomy.html">ASTRONOMY</option>
+                <option value="earthquakes.html">EARTHQUAKES</option>
+                <option value="weather.html">WEATHER</option>
+         
+            </select>
+        </nav>
+        <header style="display: none;">
+            <div>Marque uno:</div>
+            <div><input type="radio" name="selecciona" value="todos" checked />Todos</div>
+            <div><input type="radio" name="selecciona" value="agua" />Agua</div>
+            <div><input type="radio" name="selecciona" value="aire" />Aire</div>
+            <div><input type="radio" name="selecciona" value="fuego" />Fuego</div>
+            <div><input type="radio" name="selecciona" value="tierra" />Tierra</div>
+        </header>
+        <aside></aside>
+        <main></main>
+        <script>
+            const alternativas = document.querySelector("header");
+            const detalles = document.querySelector("aside");
+            const respuesta = document.querySelector("main");
+            var datos;
+            async function estudiantes() {
+                const data = await fetch("https://raw.githubusercontent.com/profesorfaco/dno037-2023-2/main/clase-07/_curso.json");
+                datos = await data.json();
+                alternativas.removeAttribute("style");
+                datos.forEach((x) => {
+                    if(x.github !== ""){
+                        respuesta.innerHTML += `<article><div><img src="${x.avatar}"></div><div><p><a href="integrante.html?lista=${x.lista}">${x.nombres.split(" ")[0]} ${x.apellidos.split(" ")[0]}</a></p><p>${
+                            x.zodiaco.signo
+                        }</p></div></article>`;
+                    }
+                });
+            }
+            estudiantes().catch((error) => console.error(error));
+
+            function compatibilidad(valor) {
+                respuesta.innerHTML = ``;
+                detalles.innerHTML = ``;
+
+                if (valor == "fuego") {
+                    about =
+                        "<em>Con signo de fuego (Aries, Leo y Sagitario)</em>: Este elemento alimenta el deseo, inspira los nuevos comienzos, mantiene el entusiasmo al rojo vivo y cocina la confianza. El fuego en un mapa natal incentiva el impulso guiado por la intuición. Invita a actuar, a tomar riesgos y a entregarse a las pasiones";
+                } else if (valor == "agua") {
+                    about =
+                        "<em>Con signo de agua (Cáncer, Escorpio y Piscis)</em>:  Este elemento es un transmisor de energía y las conexiones psíquicas, como la intuición, ascienden ante la presencia del mismo. En un mapa natal, el agua hace a las personas más transparentes, adaptables, profundas y diluye el trazo delineado entre el ‘yo’ y el prójimo.";
+                } else if (valor == "aire") {
+                    about =
+                        "<em>Con signo de aire (Géminis, Libra y Acuario)</em>: Asociado a la mente racional, arrastran el intelecto, las ideas y los dones comunicativos. La agilidad del aire hace a pensadores rápidos que socializan con frescura. Al igual que el agua, el aire cambia de forma, y su presencia en una carta astral hace a las personas más adaptables. ";
+                } else if (valor == "tierra"){
+                    about =
+                        "<em>Con signo de tierra (Tauro, Virgo, Capricornio)</em>: La practicidad, la organización y la ambición son características de las personas que viven en simbiosis con la Pachamama a través de su carta astral. Centradas en el presente, en contacto con su cuerpo y con la naturaleza, estas poseen un don para hacer que las cosas pasen";
+                } else {
+                    about = "Diseño y nuevos medios."
+                }
+
+                detalles.innerHTML += `<div><p>${about}</p></div>`;
+
+                datos.forEach((x) => {
+                    if (valor == x.zodiaco.elemento) {
+                        respuesta.innerHTML += `<article><div><img src="${x.avatar}"></div><div><p><a href="integrante.html?lista=${x.lista}">${x.nombres.split(" ")[0]} ${x.apellidos.split(" ")[0]}</a></p><p>${
+                            x.zodiaco.signo
+                        }</p></div></article>`;
+                    }
+                });
+            }
+
+            const seleccionado = document.querySelectorAll('input[name="selecciona"]');
+
+            seleccionado.forEach((i) => {
+                i.addEventListener("change", function () {
+                    var valor = this.value;
+                    if (valor !== "todos"){
+                        console.log(valor);
+                        compatibilidad(valor);
+                    } else {
+                        window.location.reload();
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
